@@ -12,7 +12,7 @@ github_token = os.environ.get('GH_TOKEN')
 telegram_bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
 telegram_chat_id = os.environ.get('TELEGRAM_CHAT_ID')
 group_usernames = ['@chatnakonn', '@v2ray_proxyz', '@VasLshoGap', '@chat_naakon', '@FlexEtesal', '@chat_nakonnn', '@letsproxys', '@Alpha_V2ray_Group', '@VpnTvGp', '@VPN_iransaz', '@chat_nakoni']
-NUM_LAST_MESSAGES = 1000
+NUM_LAST_MESSAGES = 10000
 PROXY_FILE = 'proxies.txt'
 
 SESSION_URLS = [
@@ -110,24 +110,20 @@ class ProxyCollector:
         current_date = datetime.now().strftime('%Y-%m-%d')
         total_proxies = len(self.proxies)
         
-        caption = f"**Telegram Proxy Collector Update {current_date}**\n\n"
-        caption += f"✅ **New Proxies Found: {self.new_proxies_count}**\n"
-        caption += f"📊 **Statistics:**\n"
-        caption += f"• Total Proxies Collected: {total_proxies}\n"
-        caption += f"• Groups Monitored: {len(group_usernames)}"
+        caption = f"Telegram Proxy Collector Update {current_date}\n\n"
+        caption += f"New Proxies Found: {self.new_proxies_count}\n"
+        caption += f"Statistics:\n"
+        caption += f"Total Proxies Collected: {total_proxies}\n"
+        caption += f"Groups Monitored: {len(group_usernames)}"
         
         try:
             with open(PROXY_FILE, 'rb') as f:
                 url = f"https://api.telegram.org/bot{telegram_bot_token}/sendDocument"
                 files = {'document': f}
-                data = {'chat_id': telegram_chat_id, 'caption': caption, 'parse_mode': 'Markdown'}
+                data = {'chat_id': telegram_chat_id, 'caption': caption}
                 response = requests.post(url, data=data, files=files, timeout=60)
-                if response.status_code == 200:
-                    print("File with caption sent to Telegram successfully.")
-                else:
-                    print(f"Failed to send: {response.status_code}")
-        except Exception as e:
-            print(f"Error sending to Telegram: {e}")
+        except Exception:
+            pass
 
     async def start(self):
         if not self.download_session():
