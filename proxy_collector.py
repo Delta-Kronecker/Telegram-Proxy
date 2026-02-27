@@ -9,11 +9,10 @@ api_id = os.environ.get('API_ID')
 api_hash = os.environ.get('API_HASH')
 phone_number = os.environ.get('PHONE_NUMBER')
 github_token = os.environ.get('GH_TOKEN')
-group_usernames = ['@chatnakonn', '@v2ray_outline', '@proxy_iran', '@proxy_telegram']
+group_usernames = ['@chatnakonn', '@v2ray_proxyz', '@VasLshoGap', '@chat_naakon', '@FlexEtesal', '@chat_nakonnn', '@letsproxys', '@Alpha_V2ray_Group', '@VpnTvGp', '@VPN_iransaz', '@chat_nakoni']
 NUM_LAST_MESSAGES = 20
 PROXY_FILE = 'proxies.txt'
 
-# هر دو فرمت لینک رو امتحان کن
 SESSION_URLS = [
     'https://github.com/S00SIS/tel/raw/refs/heads/main/session.session',
     'https://raw.githubusercontent.com/S00SIS/tel/main/session.session'
