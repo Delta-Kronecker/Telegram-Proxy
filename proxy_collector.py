@@ -9,8 +9,10 @@ api_id = os.environ.get('API_ID')
 api_hash = os.environ.get('API_HASH')
 phone_number = os.environ.get('PHONE_NUMBER')
 github_token = os.environ.get('GH_TOKEN')
+telegram_bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
+telegram_chat_id = os.environ.get('TELEGRAM_CHAT_ID')
 group_usernames = ['@chatnakonn', '@v2ray_proxyz', '@VasLshoGap', '@chat_naakon', '@FlexEtesal', '@chat_nakonnn', '@letsproxys', '@Alpha_V2ray_Group', '@VpnTvGp', '@VPN_iransaz', '@chat_nakoni']
-NUM_LAST_MESSAGES = 20
+NUM_LAST_MESSAGES = 1000
 PROXY_FILE = 'proxies.txt'
 
 SESSION_URLS = [
@@ -24,32 +26,25 @@ class ProxyCollector:
         self.client = None
         self.proxies = self.load_proxies()
         self.group_counts = {}
+        self.new_proxies_count = 0
 
     def download_session(self):
         if os.path.exists(SESSION_FILE):
-            print('✅ Session file already exists.')
             return True
         if not github_token:
-            print('❌ No GitHub token provided, cannot download session.')
             return False
         
         headers = {'Authorization': f'token {github_token}'}
         
         for url in SESSION_URLS:
-            print(f'Trying to download from: {url}')
             try:
                 response = requests.get(url, headers=headers, timeout=30)
                 if response.status_code == 200:
                     with open(SESSION_FILE, 'wb') as f:
                         f.write(response.content)
-                    print(f'✅ Session file downloaded successfully from {url}')
                     return True
-                else:
-                    print(f'❌ Failed from {url}. Status code: {response.status_code}')
-            except Exception as e:
-                print(f'❌ Error from {url}: {e}')
-        
-        print('❌ All download attempts failed.')
+            except Exception:
+                continue
         return False
 
     def load_proxies(self):
@@ -71,6 +66,7 @@ class ProxyCollector:
             f.write(proxy_url + '\n')
         self.proxies.add(proxy_url)
         self.group_counts[group_name] = self.group_counts.get(group_name, 0) + 1
+        self.new_proxies_count += 1
         return True
 
     def extract_proxy_links(self, text):
@@ -86,24 +82,17 @@ class ProxyCollector:
 
     async def fetch_recent_messages(self, limit):
         for group in group_usernames:
-            print(f'\n📥 Fetching last {limit} messages from {group}...')
             try:
                 chat = await self.client.get_entity(group)
                 chat_title = chat.title if hasattr(chat, 'title') else chat.username
                 messages = await self.client.get_messages(chat, limit=limit)
-                new_count = 0
                 for msg in messages:
                     if msg.text:
                         links = self.extract_proxy_links(msg.text)
                         for link in links:
-                            if self.add_proxy(link, chat_title):
-                                new_count += 1
-                if new_count:
-                    print(f'✅ Found {new_count} new proxies from {chat_title}.')
-                else:
-                    print(f'ℹ️ No new proxies found from {chat_title}.')
-            except Exception as e:
-                print(f'❌ Error accessing group {group}: {e}')
+                            self.add_proxy(link, chat_title)
+            except Exception:
+                continue
 
     async def handle_new_message(self, event):
         message = event.message
@@ -114,9 +103,34 @@ class ProxyCollector:
             for link in new_links:
                 self.add_proxy(link, chat_title)
 
+    async def send_to_telegram(self):
+        if not telegram_bot_token or not telegram_chat_id:
+            return
+        
+        current_date = datetime.now().strftime('%Y-%m-%d')
+        total_proxies = len(self.proxies)
+        
+        caption = f"**Telegram Proxy Collector Update {current_date}**\n\n"
+        caption += f"✅ **New Proxies Found: {self.new_proxies_count}**\n"
+        caption += f"📊 **Statistics:**\n"
+        caption += f"• Total Proxies Collected: {total_proxies}\n"
+        caption += f"• Groups Monitored: {len(group_usernames)}"
+        
+        try:
+            with open(PROXY_FILE, 'rb') as f:
+                url = f"https://api.telegram.org/bot{telegram_bot_token}/sendDocument"
+                files = {'document': f}
+                data = {'chat_id': telegram_chat_id, 'caption': caption, 'parse_mode': 'Markdown'}
+                response = requests.post(url, data=data, files=files, timeout=60)
+                if response.status_code == 200:
+                    print("File with caption sent to Telegram successfully.")
+                else:
+                    print(f"Failed to send: {response.status_code}")
+        except Exception as e:
+            print(f"Error sending to Telegram: {e}")
+
     async def start(self):
         if not self.download_session():
-            print('❌ Cannot proceed without session file.')
             return
 
         self.client = TelegramClient(SESSION_FILE, int(api_id), api_hash)
@@ -125,34 +139,18 @@ class ProxyCollector:
         async def message_handler(event):
             await self.handle_new_message(event)
 
-        print('🔌 Connecting to Telegram...')
         await self.client.start(phone=phone_number)
-        print('✅ Connected!')
-
         await self.fetch_recent_messages(NUM_LAST_MESSAGES)
+        await self.send_to_telegram()
         await asyncio.sleep(2)
-        print('\n✅ Program completed.')
-        self.print_summary()
         await self.client.disconnect()
-
-    def print_summary(self):
-        print('\n' + '='*50)
-        print(f'📊 Summary of collected proxies: {len(self.proxies)}')
-        print('='*50)
-        if self.group_counts:
-            print('\n📈 Proxies found per group:')
-            for group, count in self.group_counts.items():
-                print(f'  • {group}: {count}')
-        print(f'\n💾 Proxies saved in file {PROXY_FILE}.')
 
 async def main():
     collector = ProxyCollector()
     try:
         await collector.start()
-    except Exception as e:
-        print(f'❌ Error: {e}')
-        import traceback
-        traceback.print_exc()
+    except Exception:
+        pass
 
 if __name__ == '__main__':
     asyncio.run(main())
