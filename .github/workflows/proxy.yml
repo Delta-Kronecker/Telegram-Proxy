@@ -2,7 +2,7 @@ name: Proxy Collector
 
 on:
   schedule:
-    - cron: '0 */6 * * *'
+    - cron: '0 */3 * * *'  
   workflow_dispatch:
 
 jobs:
@@ -20,11 +20,9 @@ jobs:
         
     - name: Install dependencies
       run: |
-        pip install telethon
-        pip install cryptography
-        pip install requests
+        pip install telethon requests
         
-    - name: Download existing proxies file
+    - name: Download existing proxies file (if any)
       run: |
         if [ -f proxies.txt ]; then
           cp proxies.txt proxies_backup.txt
@@ -35,6 +33,7 @@ jobs:
         API_ID: ${{ secrets.API_ID }}
         API_HASH: ${{ secrets.API_HASH }}
         PHONE_NUMBER: ${{ secrets.PHONE_NUMBER }}
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}  
       run: |
         python proxy_collector.py
         
