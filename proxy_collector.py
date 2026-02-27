@@ -8,10 +8,12 @@ from datetime import datetime
 api_id = os.environ.get('API_ID')
 api_hash = os.environ.get('API_HASH')
 phone_number = os.environ.get('PHONE_NUMBER')
-group_usernames = ['@chatnakonn', '@group2', '@group3']
+github_token = os.environ.get('GH_TOKEN')  
+group_usernames = ['@chatnakonn', '@v2ray_outline', '@proxy_iran', '@proxy_telegram']
 NUM_LAST_MESSAGES = 20
 PROXY_FILE = 'proxies.txt'
 SESSION_URL = 'https://github.com/S00SIS/tel/raw/refs/heads/main/session.session'
+SESSION_FILE = 'session.session'
 
 class ProxyCollector:
     def __init__(self):
@@ -20,16 +22,26 @@ class ProxyCollector:
         self.group_counts = {}
 
     def download_session(self):
+        if os.path.exists(SESSION_FILE):
+            print('Session file already exists.')
+            return True
+        if not github_token:
+            print('No GitHub token provided, cannot download session.')
+            return False
+        headers = {'Authorization': f'token {github_token}'}
         try:
-            response = requests.get(SESSION_URL)
+            response = requests.get(SESSION_URL, headers=headers, timeout=30)
             if response.status_code == 200:
-                with open('session.session', 'wb') as f:
+                with open(SESSION_FILE, 'wb') as f:
                     f.write(response.content)
                 print('Session file downloaded successfully.')
+                return True
             else:
-                print('Failed to download session file.')
+                print(f'Failed to download session. Status code: {response.status_code}')
+                return False
         except Exception as e:
             print(f'Error downloading session: {e}')
+            return False
 
     def load_proxies(self):
         proxies = set()
@@ -94,8 +106,11 @@ class ProxyCollector:
                 self.add_proxy(link, chat_title)
 
     async def start(self):
-        self.download_session()
-        self.client = TelegramClient('session.session', int(api_id), api_hash)
+        if not self.download_session():
+            print('Cannot proceed without session file.')
+            return
+
+        self.client = TelegramClient(SESSION_FILE, int(api_id), api_hash)
 
         @self.client.on(events.NewMessage(chats=group_usernames))
         async def message_handler(event):
