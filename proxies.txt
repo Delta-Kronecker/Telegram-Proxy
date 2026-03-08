@@ -7749,3 +7749,7 @@ https://t.me/proxy?server=194.146.36.2&port=443&secret=6f4da755f1bbeb575b8d5639f
 https://t.me/proxy?server=185.143.233.120&port=2086&secret=e9e437c2-1ee5-4f0d-ae09-4bfafc835e47https://t.me/proxy?server=185.143.233.120&port=2086&secret=e9e437c2-1ee5-4f0d-ae09-4bfafc835e47
 
 https://t.me/proxy?server=ffastdomain-eu.com&port=443&secret=afdc38b8068b2444e50f6a4f093751b5
+
+https://t.me/proxy?server=91.99.162.73&port=4455&secret=dd104462821249bd7ac519130220c25d09
+
+https://t.me/proxy?server=195.3.221.225&port=23740&secret=ddcf5c0ed435ad1102b40e6ae75d47469a
