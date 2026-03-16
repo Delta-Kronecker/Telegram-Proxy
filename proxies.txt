@@ -8015,3 +8015,23 @@ https://t.me/proxy?server=195.254.165.151&port=4455&secret=ee1603010200010001fc0
 https://t.me/proxy?server=87.248.149.168&port=443000&secret=EERigv%2F%2F%2F%2F%2F%2F+AAA%2F%2FgAAA
 
 https://t.me/proxy?server=87.248.149.173&port=443&secret=eeNEgYdJvXrFGRMCIMJdCQRueWVrdGFuZXQuY29tZmFyYWthdi5jb212YW4ubmFqdmEuY29tAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+https://t.me/proxy?server=195.254.165.251&Telegram-saministamm-Telegram-saministamm-Telegram-saministamm-Telegram-saministamm-Telegram-saministamm-Telegram-saministamm-Telegram-saministamm-Telegram-saministamm&port=25565&secret=dd79e344818749bd7ac519130220c25d09
+
+https://t.me/proxy?server=azir_proxy.viramon.net&port=443&secret=7h92-1lfYdfrZ-YFlGcrHslhcGkubmlydmFuYS1zbW9rZS5jb20
+
+https://t.me/proxy?server=80.191.110.161&port=110&secret=ddbb01e59aa510ca70ce9e935c471df2d8@SPARTAN_YT
+
+https://t.me/proxy?server=195.254.165.245&port=25565&secret=dd79e344818749bd7ac519130220c25d09@SPARTAN_YT
+
+https://t.me/proxy?server=free-mtproto.flexiblenet.org&port=443&secret=4da47f00c2291d55696fa3ae954ffd78
+
+https://t.me/proxy?server=194.120.230.106&port=433&secret=dd79e7010200010007f0030386e24c3add
+
+https://t.me/proxy?server=107.150.34.98&port=443&secret=7gnbgVptgqMf2nb4ciMMaddwa2didWlsZC5vcmc
+
+https://t.me/proxy?server=107.150.34.102&port=443&secret=7gnbgVptgqMf2nb4ciMMaddwa2didWlsZC5vcmc
+
+https://t.me/proxy?server=107.150.34.100&port=443&secret=7gnbgVptgqMf2nb4ciMMaddwa2didWlsZC5vcmc
+
+https://t.me/proxy?server=2.144.23.51&port=6678&secret=ee09db815a6d82a31fda76f872230c69d7706b676275696c642e6f7267
